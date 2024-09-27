@@ -7,14 +7,16 @@ const bodyparser = require("body-parser");
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const path = require('path');
+require('dotenv').config(); // Load environment variables
 
-const secretKey = "SGPV";
+// Load environment variables
+const mongodbUrl = process.env.MONGODB_URL;
+const port = process.env.PORT || 5000;
+const secretKey = process.env.SECRET_KEY;
 
 const app = express();
 
 app.use(bodyparser.json());
-
-const mongodbUrl = "mongodb://localhost:27017/SGPV-libraryy";
 
 mongoose.connect(mongodbUrl)
     .then(() => console.log("Connected to MongoDB"))
@@ -85,11 +87,6 @@ app.post('/signup', upload.single('file'), async (req, res) => {
     }
 });
 
-// Start the server
-app.listen(5000, () => {
-    console.log("Server is running on port 5000");
-});
-
 // Login route
 app.get("/login", async (req, res) => {
     try {
@@ -127,6 +124,12 @@ app.get("/login", async (req, res) => {
     }
 });
 
-app.get("/cart",async(req,res)=>{
-    res.status(400).json({message:"this is cart server"})
-})
+// Cart route
+app.get("/cart", (req, res) => {
+    res.status(400).json({ message: "This is cart server" });
+});
+
+// Start the server
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
